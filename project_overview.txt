@@ -1,0 +1,55 @@
+
+📘 DỰ ÁN: ỨNG DỤNG QUẢN LÝ DÂN SỐ (LOCAL - SQLITE - 10 TRIỆU DÂN)
+
+MỤC TIÊU:
+- Xây dựng ứng dụng quản lý dân số (hơn 10 triệu bản ghi)
+- Chạy hoàn toàn local, không cần internet hay server
+- Sử dụng SQLite làm cơ sở dữ liệu
+- Hỗ trợ các chức năng: thêm, cập nhật, xoá, tìm kiếm công dân
+- Dữ liệu được sinh giả bằng thư viện Faker
+
+CẤU TRÚC DỰ ÁN:
+population_app/
+│
+├── main.py                  # Chạy ứng dụng CLI hoặc kiểm thử hàm
+├── database/
+│   └── citizen.db           # File SQLite lưu dữ liệu
+├── scripts/
+│   └── generate_data.py     # Sinh dữ liệu giả (10 triệu bản ghi)
+├── services/
+│   ├── db_handler.py        # Kết nối và thao tác với SQLite
+│   └── logic.py             # Thao tác insert, update, delete, search
+├── utils/
+│   └── common.py            # Hàm tiện ích: generate ID, validate,...
+├── streamlit_app.py         # (Tuỳ chọn) giao diện Streamlit
+└── environment.yaml         # Môi trường conda cho toàn bộ dự án
+
+TÍNH NĂNG CHÍNH:
+- Thêm công dân: name, dob, sex, perID
+- Cập nhật thông tin
+- Xoá công dân theo ID
+- Tìm kiếm theo perID hoặc tên
+- Giao diện Streamlit dễ dùng (nếu bật)
+
+THƯ VIỆN SỬ DỤNG:
+- Python 3.10
+- sqlite3 (có sẵn trong Python)
+- Faker (sinh dữ liệu giả)
+- Streamlit (tạo giao diện đơn giản)
+- tqdm (hiển thị tiến trình sinh dữ liệu)
+
+CÁCH DÙNG:
+1. Tạo môi trường conda:
+    conda env create -f environment.yaml
+    conda activate population_app
+
+2. Sinh dữ liệu:
+    python scripts/generate_data.py
+
+3. Khởi chạy ứng dụng:
+    - Dạng dòng lệnh: python main.py
+    - Giao diện web:   streamlit run streamlit_app.py
+
+LƯU Ý:
+- Dữ liệu 10 triệu bản ghi có thể mất vài phút để sinh ra
+- Nên dùng SQLite index để đảm bảo hiệu năng truy vấn nhanh

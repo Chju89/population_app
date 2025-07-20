@@ -1,0 +1,15 @@
+name: population_app
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - python=3.10
+  - pip
+  - sqlite
+  - pandas
+  - faker
+  - streamlit
+  - pip:
+      - tqdm  # để hiển thị progress khi sinh dữ liệu
+

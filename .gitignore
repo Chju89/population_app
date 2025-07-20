@@ -1,0 +1,14 @@
+# Ignore database and temp files
+*.db
+__pycache__/
+*.pyc
+*.pyo
+*.sqlite
+*.sqlite3
+
+# Streamlit cache
+.streamlit/
+
+# Ignore large generated data
+database/
+
