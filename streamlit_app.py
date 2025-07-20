@@ -1,5 +1,6 @@
 
 import streamlit as st
+import pandas as pd
 from services.db_handler import insert_citizen, update_citizen, delete_citizen, search_by_perID, search_by_name
 
 st.title("📋 Quản Lý Dân Số (Local - SQLite)")
@@ -10,20 +11,45 @@ with tab1:
     st.header("Tìm kiếm công dân")
     search_type = st.radio("Tìm theo:", ["perID", "name"])
     query = st.text_input("Nhập nội dung cần tìm")
+    page_size = 20  # số dòng mỗi trang
+
+    # --- Thao tác tìm kiếm ---
     if st.button("Tìm"):
         if search_type == "perID":
             result = search_by_perID(query)
             if result:
-                st.success(result)
+                st.session_state["search_perid_result"] = result
             else:
-                st.warning("Không tìm thấy.")
+                st.session_state["search_perid_result"] = None
         else:
             results = search_by_name(query)
-            if results:
-                st.success(f"Tìm thấy {len(results)} kết quả")
-                st.dataframe(results)
-            else:
-                st.warning("Không tìm thấy.")
+            st.session_state["search_results"] = results
+            st.session_state["query_string"] = query
+
+    # --- Hiển thị kết quả tìm theo perID ---
+    if search_type == "perID" and "search_perid_result" in st.session_state:
+        result = st.session_state["search_perid_result"]
+        if result:
+            st.success(result)
+        else:
+            st.warning("Không tìm thấy.")
+
+    # --- Hiển thị kết quả tìm theo name + phân trang ---
+    elif search_type == "name" and "search_results" in st.session_state:
+        results = st.session_state["search_results"]
+        if results:
+            df = pd.DataFrame(results, columns=["perID", "Name", "DOB", "Sex"])
+            total_results = len(df)
+            total_pages = (total_results - 1) // page_size + 1
+
+            page = st.number_input("Trang", min_value=1, max_value=total_pages, value=1, step=1)
+            start_idx = (page - 1) * page_size
+            end_idx = start_idx + page_size
+
+            st.success(f"Tìm thấy {total_results} kết quả – Trang {page}/{total_pages}")
+            st.dataframe(df.iloc[start_idx:end_idx])
+        else:
+            st.warning("Không tìm thấy.")
 
 with tab2:
     st.header("Thêm công dân mới")
